@@ -33,16 +33,36 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName('Sistem Informasi Tahanan')
+
+            ->brandLogo(fn () => new HtmlString('
+                <div style="display:flex; align-items:center; gap:10px; white-space:nowrap;">
+                    <img src="' . asset('images/logo.png') . '" style="height:57px;">
+                    <span style="font-weight:bold; font-size:18px; color:white;">
+                        Sistem Informasi Tahanan
+                    </span>
+                </div>
+            '))
+
             ->darkMode(isForced: true)
+
             ->colors([
                 'primary' => Color::Indigo,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+
+            ->discoverResources(
+                in: app_path('Filament/Resources'),
+                for: 'App\\Filament\\Resources'
+            )
+
+            ->discoverPages(
+                in: app_path('Filament/Pages'),
+                for: 'App\\Filament\\Pages'
+            )
+
             ->pages([
                 Pages\Dashboard::class,
             ])
+
             ->widgets([
                 TahananOverview::class,
                 TahananBulananChart::class,
@@ -50,12 +70,14 @@ class AdminPanelProvider extends PanelProvider
                 StatusTahananChart::class,
                 NotifikasiSingkat::class,
             ])
+
             ->navigationItems([
                 NavigationItem::make('Logout')
                     ->url(fn (): string => route('filament.admin.auth.logout'))
                     ->icon('heroicon-o-arrow-left-on-rectangle')
                     ->sort(9999),
             ])
+
             ->renderHook(
                 'panels::head.end',
                 fn (): HtmlString => new HtmlString(
@@ -67,9 +89,14 @@ class AdminPanelProvider extends PanelProvider
                         .fi-sidebar-nav a[href*="logout"] svg {
                             color: rgb(248 113 113) !important;
                         }
-                    </style>',
+
+                        .fi-simple-header-heading {
+                            font-size: 18px !important;
+                        }
+                    </style>'
                 ),
             )
+
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -81,6 +108,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+
             ->authMiddleware([
                 Authenticate::class,
             ]);

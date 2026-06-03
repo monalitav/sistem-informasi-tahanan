@@ -4,8 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\NotifikasiResource\Pages;
 use App\Models\Notifikasi;
-use Carbon\Carbon;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -77,9 +75,11 @@ class NotifikasiResource extends Resource
                     ->sortable()
                     ->copyable()
                     ->weight('bold'),
+
                 Tables\Columns\TextColumn::make('tahanan.nama')
                     ->label('Nama')
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('jenis')
                     ->badge()
                     ->formatStateUsing(function (string $state, Notifikasi $record): string {
@@ -91,6 +91,7 @@ class NotifikasiResource extends Resource
                             $diff = $record->tanggal_target
                                 ? now()->startOfDay()->diffInDays($record->tanggal_target, false)
                                 : null;
+
                             $days = $diff !== null ? max(1, (int) $diff) : null;
 
                             return $days ? "Keluar kurang {$days} hari" : 'Keluar kurang dari 7 hari';
@@ -103,17 +104,29 @@ class NotifikasiResource extends Resource
                         'keluar_7_hari' => Color::Amber,
                         default => null,
                     }),
+
                 Tables\Columns\TextColumn::make('tanggal_target')
                     ->label('Tanggal')
                     ->date('d-m-Y')
                     ->description(fn (Notifikasi $record): ?string => $record->tanggal_target?->isToday() ? 'Hari ini' : null)
                     ->sortable()
                     ->icon('heroicon-m-calendar'),
+
                 Tables\Columns\TextColumn::make('sisa_hari')
                     ->label('Sisa Hari')
-                    ->state(fn (Notifikasi $record): ?int => $record->tanggal_target ? now()->startOfDay()->diffInDays($record->tanggal_target, false) : null)
+                    ->state(fn (Notifikasi $record): ?int => $record->tanggal_target
+                        ? now()->startOfDay()->diffInDays($record->tanggal_target, false)
+                        : null)
                     ->badge()
-                    ->formatStateUsing(fn (?int $state) => $state !== null ? ($state == 0 ? 'Hari ini' : ($state < 0 ? 'Lewat '.abs($state).' hari' : $state.' hari lagi')) : '-')
+                    ->formatStateUsing(fn (?int $state) =>
+                        $state !== null
+                            ? ($state == 0
+                                ? 'Hari ini'
+                                : ($state < 0
+                                    ? 'Lewat ' . abs($state) . ' hari'
+                                    : $state . ' hari lagi'))
+                            : '-'
+                    )
                     ->color(fn (?int $state): array|string|null => match (true) {
                         $state === null => null,
                         $state <= 0 => Color::Red,
@@ -121,12 +134,14 @@ class NotifikasiResource extends Resource
                         default => Color::Green,
                     })
                     ->sortable(query: fn ($query, string $direction) => $query->orderBy('tanggal_target', $direction)),
+
                 Tables\Columns\TextColumn::make('pesan')
                     ->wrap()
                     ->extraAttributes([
                         'style' => 'min-width: 400px;',
                     ])
                     ->tooltip(fn (Notifikasi $record): string => $record->pesan),
+
                 Tables\Columns\IconColumn::make('is_terbaca')
                     ->label('Status')
                     ->getStateUsing(fn (Notifikasi $record): bool => $record->terbaca_at !== null)
@@ -136,16 +151,19 @@ class NotifikasiResource extends Resource
                     ->trueColor('success')
                     ->falseColor('warning')
                     ->sortable(query: fn ($query, string $direction) => $query->orderBy('terbaca_at', $direction)),
+
                 Tables\Columns\TextColumn::make('terbaca_at')
                     ->label('Waktu Terbaca')
                     ->dateTime('d-m-Y H:i')
                     ->placeholder('-')
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d-m-Y H:i')
                     ->sortable(),
             ])
+
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_terbaca')
                     ->label('Status Baca')
@@ -156,64 +174,43 @@ class NotifikasiResource extends Resource
                         true: fn (Builder $query) => $query->whereNotNull('terbaca_at'),
                         false: fn (Builder $query) => $query->whereNull('terbaca_at'),
                     ),
+
                 Tables\Filters\SelectFilter::make('jenis')
                     ->label('Jenis Notifikasi')
                     ->options([
                         'keluar_hari_ini' => 'Keluar hari ini',
                         'keluar_7_hari' => 'Keluar kurang dari 7 hari',
                     ]),
-                Tables\Filters\Filter::make('tanggal_target')
-                    ->form([
-                        DatePicker::make('dari')
-                            ->label('Dari Tanggal')
-                            ->native(false),
-                        DatePicker::make('sampai')
-                            ->label('Sampai Tanggal')
-                            ->native(false),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['dari'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('tanggal_target', '>=', $date),
-                            )
-                            ->when(
-                                $data['sampai'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('tanggal_target', '<=', $date),
-                            );
-                    })
-                    ->indicateUsing(function (array $data): array {
-                        $indicators = [];
-                        if ($data['dari'] ?? null) {
-                            $indicators[] = 'Dari '.Carbon::parse($data['dari'])->format('d/m/Y');
-                        }
-                        if ($data['sampai'] ?? null) {
-                            $indicators[] = 'Sampai '.Carbon::parse($data['sampai'])->format('d/m/Y');
-                        }
-
-                        return $indicators;
-                    }),
             ])
+
             ->actions([
                 Tables\Actions\Action::make('lihat_tahanan')
                     ->label('Detail')
                     ->icon('heroicon-o-eye')
                     ->url(fn (Notifikasi $record): string => TahananResource::getUrl('view', ['record' => $record->tahanan_id])),
+
                 Tables\Actions\Action::make('tandai_dibaca')
                     ->label('Tandai dibaca')
                     ->icon('heroicon-o-check')
                     ->visible(fn (Notifikasi $record): bool => $record->terbaca_at === null)
-                    ->action(fn (Notifikasi $record) => $record->update(['terbaca_at' => now()])),
+                    ->action(fn (Notifikasi $record) => $record->update([
+                        'terbaca_at' => now(),
+                    ])),
             ])
+
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\BulkAction::make('tandai_dibaca')
                         ->label('Tandai dibaca')
                         ->icon('heroicon-o-check')
-                        ->action(fn ($records) => $records->each->update(['terbaca_at' => now()])),
+                        ->action(fn ($records) => $records->each->update([
+                            'terbaca_at' => now(),
+                        ])),
                 ]),
             ])
+
             ->defaultSort('tanggal_target', 'asc')
+
             ->modifyQueryUsing(function (Builder $query) {
                 $search = request()->query('tableSearch');
 
@@ -226,8 +223,8 @@ class NotifikasiResource extends Resource
                         $query->where('nama', 'like', "%{$search}%")
                             ->orWhere('nomor_registrasi', 'like', "%{$search}%");
                     })
-                        ->orWhere('jenis', 'like', "%{$search}%")
-                        ->orWhere('pesan', 'like', "%{$search}%");
+                    ->orWhere('jenis', 'like', "%{$search}%")
+                    ->orWhere('pesan', 'like', "%{$search}%");
                 });
             });
     }

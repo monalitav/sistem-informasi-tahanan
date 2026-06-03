@@ -12,6 +12,11 @@ class CreateTahanan extends CreateRecord
 
     protected static bool $canCreateAnother = false;
 
+    public function getMaxContentWidth(): ?string
+    {
+        return 'full';
+    }
+
     protected function getCreateFormAction(): Action
     {
         return parent::getCreateFormAction()

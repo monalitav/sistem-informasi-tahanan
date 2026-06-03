@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TahananResource\Pages;
 use App\Models\Tahanan;
+
+use Filament\Forms\Form;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -11,7 +13,6 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -38,7 +39,7 @@ class TahananResource extends Resource
         return $form
             ->schema([
                 Tabs::make('Data Tahanan')
-                    ->persistTabInQueryString()
+                   ->columnSpanFull()
                     ->tabs([
                         Tab::make('Data Demografi')
                             ->schema([
@@ -260,7 +261,7 @@ class TahananResource extends Resource
                         TextEntry::make('alamat_terakhir')->label('Alamat Terakhir')->placeholder('-')->columnSpanFull(),
                         TextEntry::make('nama_ayah')->label('Nama Ayah')->placeholder('-'),
                     ])
-                    ->columns(2),
+                    ->columns(4),
                 Section::make('Data Catatan Kriminal')
                     ->schema([
                         TextEntry::make('jenis_kejahatan')->label('Jenis Kejahatan')->placeholder('-'),
