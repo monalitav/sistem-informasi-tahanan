@@ -49,7 +49,7 @@ class Tahanan extends Model
         'foto_samping_kiri',
 
         // ======================
-        // 🔥 SIDIK JARI (WAJIB)
+        // 
         // ======================
         'jempol_kanan',
         'telunjuk_kanan',

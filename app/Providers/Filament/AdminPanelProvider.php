@@ -32,16 +32,22 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->brandName('Sistem Informasi Tahanan Polres Malang')
             ->login()
 
-            ->brandLogo(fn () => new HtmlString('
-                <div style="display:flex; align-items:center; gap:10px; white-space:nowrap;">
-                    <img src="' . asset('images/logo.png') . '" style="height:57px;">
-                    <span style="font-weight:bold; font-size:18px; color:white;">
-                        Sistem Informasi Tahanan
-                    </span>
-                </div>
-            '))
+           ->brandLogo(fn () => new HtmlString('
+    <div style="display:flex; align-items:center; gap:8px;">
+        <img src="' . asset('images/logo.png') . '" style="height:55px;">
+        <div style="line-height:1.2;">
+            <div style="font-size:16px; font-weight:600; color:white;">
+                Sistem Informasi Tahanan
+            </div>
+            <div style="font-size:16px; color:white;">
+                Polres Malang
+            </div>
+        </div>
+    </div>
+'))
 
             ->darkMode(isForced: true)
 
@@ -91,7 +97,7 @@ class AdminPanelProvider extends PanelProvider
                         }
 
                         .fi-simple-header-heading {
-                            font-size: 18px !important;
+                            font-size: 17px !important;
                         }
                     </style>'
                 ),
