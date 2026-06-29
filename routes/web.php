@@ -22,6 +22,10 @@ Route::delete('/admin/tahanans/{tahanan}', TahananDestroyController::class)
     ->middleware('auth')
     ->name('admin.tahanan.destroy');
 
+Route::post('/admin/notifikasis/tandai-dibaca/{id}', [App\Http\Controllers\NotifikasiController::class, 'tandaiDibaca'])
+    ->middleware('auth')
+    ->name('admin.notifikasi.tandai-dibaca');
+
 Route::get('/admin/logout', function () {
     return response()->view('admin.logout');
 })->name('admin.logout');
