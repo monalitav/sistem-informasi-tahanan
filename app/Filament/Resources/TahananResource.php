@@ -316,59 +316,8 @@ class TahananResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('nomor_registrasi')
-                    ->label('No. Registrasi')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('nama')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('nik')
-                    ->label('NIK')
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('tanggal_masuk')
-                    ->label('Masuk')
-                    ->date('d-m-Y')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('tanggal_keluar')
-                    ->label('Keluar')
-                    ->date('d-m-Y')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->badge()
-                    ->color(fn (string $state): array|string|null => match ($state) {
-                        'aktif' => Color::Green,
-                        'keluar' => Color::Gray,
-                        default => null,
-                    })
-                    ->sortable(),
-                Tables\Columns\ViewColumn::make('aksi')
-                    ->label('Aksi')
-                    ->view('filament.tables.columns.tahanan-aksi')
-                    ->alignEnd(),
-            ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('status')
-                    ->options([
-                        'aktif' => 'Aktif',
-                        'keluar' => 'Keluar',
-                    ]),
-                Tables\Filters\Filter::make('keluar_7_hari')
-                    ->label('Keluar kurang dari 7 hari ke depan')
-                    ->query(function ($query) {
-                        $today = now()->startOfDay();
-                        $end = now()->startOfDay()->addDays(7)->endOfDay();
-
-                        return $query
-                            ->where('status', 'aktif')
-                            ->whereBetween('tanggal_keluar', [$today->toDateString(), $end->toDateString()]);
-                    }),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+        // Table definition not used - custom view implemented
+        return $table->columns([]);
     }
 
     public static function getRelations(): array
