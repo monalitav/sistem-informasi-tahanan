@@ -7,6 +7,7 @@ use App\Models\Tahanan;
 
 use Filament\Forms\Form;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
@@ -14,12 +15,11 @@ use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Fieldset as InfolistFieldset;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
-use Filament\Tables;
 use Filament\Tables\Table;
 
 class TahananResource extends Resource
@@ -146,13 +146,13 @@ class TahananResource extends Resource
                                     ->columnSpanFull(),
                             ])
                             ->columns(2),
-                        Tab::make('Data Biografi')
+                        Tab::make('Data Biometri')
                             ->schema([
                                 FileUpload::make('foto_tampak_depan')
                                     ->label('Foto Tampak Depan')
                                     ->image()
                                     ->disk('public')
-                                    ->directory('tahanan/biografi')
+                                    ->directory('tahanan/biometri')
                                     ->visibility('public'),
                                 FileUpload::make('foto_samping_kanan')
                                     ->label('Foto Samping Kanan')
@@ -170,75 +170,85 @@ class TahananResource extends Resource
                             ->columns(2),
                          Tab::make('Sidik Jari')
                            ->schema([
-                              FileUpload::make('jempol_kanan')
-                                  ->label('Jempol Kanan')
-                                  ->image()
-                                  ->disk('public')
-                                  ->directory('tahanan/sidik_jari')
-                                  ->visibility('public'),
+                              Fieldset::make('Tangan Kanan')
+                                  ->schema([
+                                      FileUpload::make('jempol_kanan')
+                                          ->label('Jempol Kanan')
+                                          ->image()
+                                          ->disk('public')
+                                          ->directory('tahanan/sidik_jari')
+                                          ->visibility('public'),
 
-                             FileUpload::make('telunjuk_kanan')
-                                ->label('Telunjuk Kanan')
-                                ->image()
-                                ->disk('public')
-                                ->directory('tahanan/sidik_jari')
-                                ->visibility('public'),
+                                      FileUpload::make('telunjuk_kanan')
+                                        ->label('Telunjuk Kanan')
+                                        ->image()
+                                        ->disk('public')
+                                        ->directory('tahanan/sidik_jari')
+                                        ->visibility('public'),
 
-                            FileUpload::make('tengah_kanan')
-                               ->label('Jari Tengah Kanan')
-                               ->image()
-                               ->disk('public')
-                               ->directory('tahanan/sidik_jari')
-                               ->visibility('public'),
+                                    FileUpload::make('tengah_kanan')
+                                       ->label('Jari Tengah Kanan')
+                                       ->image()
+                                       ->disk('public')
+                                       ->directory('tahanan/sidik_jari')
+                                       ->visibility('public'),
 
-                           FileUpload::make('manis_kanan')
-                               ->label('Jari Manis Kanan')
-                               ->image()
-                               ->disk('public')
-                               ->directory('tahanan/sidik_jari')
-                               ->visibility('public'),
+                                   FileUpload::make('manis_kanan')
+                                       ->label('Jari Manis Kanan')
+                                       ->image()
+                                       ->disk('public')
+                                       ->directory('tahanan/sidik_jari')
+                                       ->visibility('public'),
 
-                            FileUpload::make('kelingking_kanan')
-                               ->label('Kelingking Kanan')
-                               ->image()
-                               ->disk('public')
-                               ->directory('tahanan/sidik_jari')
-                               ->visibility('public'),
+                                    FileUpload::make('kelingking_kanan')
+                                       ->label('Kelingking Kanan')
+                                       ->image()
+                                       ->disk('public')
+                                       ->directory('tahanan/sidik_jari')
+                                       ->visibility('public'),
+                                  ])
+                                  ->columns(5)
+                                  ->columnSpanFull(),
 
-                            FileUpload::make('jempol_kiri')
-                               ->label('Jempol Kiri')
-                               ->image()
-                               ->disk('public')
-                               ->directory('tahanan/sidik_jari')
-                               ->visibility('public'),
+                              Fieldset::make('Tangan Kiri')
+                                  ->schema([
+                                    FileUpload::make('jempol_kiri')
+                                       ->label('Jempol Kiri')
+                                       ->image()
+                                       ->disk('public')
+                                       ->directory('tahanan/sidik_jari')
+                                       ->visibility('public'),
 
-                            FileUpload::make('telunjuk_kiri')
-                               ->label('Telunjuk Kiri')
-                               ->image()
-                               ->disk('public')
-                               ->directory('tahanan/sidik_jari')
-                               ->visibility('public'),
+                                    FileUpload::make('telunjuk_kiri')
+                                       ->label('Telunjuk Kiri')
+                                       ->image()
+                                       ->disk('public')
+                                       ->directory('tahanan/sidik_jari')
+                                       ->visibility('public'),
 
-                            FileUpload::make('tengah_kiri')
-                              ->label('Jari Tengah Kiri')
-                              ->image()
-                              ->disk('public')
-                              ->directory('tahanan/sidik_jari')
-                              ->visibility('public'),
+                                    FileUpload::make('tengah_kiri')
+                                      ->label('Jari Tengah Kiri')
+                                      ->image()
+                                      ->disk('public')
+                                      ->directory('tahanan/sidik_jari')
+                                      ->visibility('public'),
 
-                            FileUpload::make('manis_kiri')
-                              ->label('Jari Manis Kiri')
-                              ->image()
-                              ->disk('public')
-                              ->directory('tahanan/sidik_jari')
-                             ->visibility('public'),
+                                    FileUpload::make('manis_kiri')
+                                      ->label('Jari Manis Kiri')
+                                      ->image()
+                                      ->disk('public')
+                                      ->directory('tahanan/sidik_jari')
+                                     ->visibility('public'),
 
-                             FileUpload::make('kelingking_kiri')
-                              ->label('Kelingking Kiri')
-                              ->image()
-                              ->disk('public')
-                              ->directory('tahanan/sidik_jari')
-                              ->visibility('public'),
+                                     FileUpload::make('kelingking_kiri')
+                                      ->label('Kelingking Kiri')
+                                      ->image()
+                                      ->disk('public')
+                                      ->directory('tahanan/sidik_jari')
+                                      ->visibility('public'),
+                                  ])
+                                  ->columns(5)
+                                  ->columnSpanFull(),
                    ])
                       ->columns(2)
                     ]),
@@ -297,17 +307,27 @@ class TahananResource extends Resource
     ->columns(2),
              Section::make('Sidik Jari')
                 ->schema([
-                    ImageEntry::make('jempol_kanan')->label('Jempol Kanan')->url(fn ($record) => asset('storage/' . $record->jempol_kanan))->height(120)->placeholder('-'),
-                    ImageEntry::make('telunjuk_kanan')->label('Telunjuk Kanan')->url(fn ($record) => asset('storage/' . $record->telunjuk_kanan))->height(120)->placeholder('-'),
-                    ImageEntry::make('tengah_kanan')->label('Jari Tengah Kanan')->url(fn ($record) => asset('storage/' . $record->tengah_kanan))->height(120)->placeholder('-'),
-                    ImageEntry::make('manis_kanan')->label('Jari Manis Kanan')->url(fn ($record) => asset('storage/' . $record->manis_kanan))->height(120)->placeholder('-'),
-                    ImageEntry::make('kelingking_kanan')->label('Kelingking Kanan')->url(fn ($record) => asset('storage/' . $record->kelingking_kanan))->height(120)->placeholder('-'),
+                    InfolistFieldset::make('Tangan Kanan')
+                        ->schema([
+                            ImageEntry::make('jempol_kanan')->label('Jempol Kanan')->url(fn ($record) => asset('storage/' . $record->jempol_kanan))->height(120)->placeholder('-'),
+                            ImageEntry::make('telunjuk_kanan')->label('Telunjuk Kanan')->url(fn ($record) => asset('storage/' . $record->telunjuk_kanan))->height(120)->placeholder('-'),
+                            ImageEntry::make('tengah_kanan')->label('Jari Tengah Kanan')->url(fn ($record) => asset('storage/' . $record->tengah_kanan))->height(120)->placeholder('-'),
+                            ImageEntry::make('manis_kanan')->label('Jari Manis Kanan')->url(fn ($record) => asset('storage/' . $record->manis_kanan))->height(120)->placeholder('-'),
+                            ImageEntry::make('kelingking_kanan')->label('Kelingking Kanan')->url(fn ($record) => asset('storage/' . $record->kelingking_kanan))->height(120)->placeholder('-'),
+                        ])
+                        ->columns(5)
+                        ->columnSpanFull(),
 
-                    ImageEntry::make('jempol_kiri')->label('Jempol Kiri')->url(fn ($record) => asset('storage/' . $record->jempol_kiri))->height(120)->placeholder('-'),
-                    ImageEntry::make('telunjuk_kiri')->label('Telunjuk Kiri')->url(fn ($record) => asset('storage/' . $record->telunjuk_kiri))->height(120)->placeholder('-'),
-                    ImageEntry::make('tengah_kiri')->label('Jari Tengah Kiri')->url(fn ($record) => asset('storage/' . $record->tengah_kiri))->height(120)->placeholder('-'),
-                    ImageEntry::make('manis_kiri')->label('Jari Manis Kiri')->url(fn ($record) => asset('storage/' . $record->manis_kiri))->height(120)->placeholder('-'),
-                    ImageEntry::make('kelingking_kiri')->label('Kelingking Kiri')->url(fn ($record) => asset('storage/' . $record->kelingking_kiri))->height(120)->placeholder('-'),
+                    InfolistFieldset::make('Tangan Kiri')
+                        ->schema([
+                            ImageEntry::make('jempol_kiri')->label('Jempol Kiri')->url(fn ($record) => asset('storage/' . $record->jempol_kiri))->height(120)->placeholder('-'),
+                            ImageEntry::make('telunjuk_kiri')->label('Telunjuk Kiri')->url(fn ($record) => asset('storage/' . $record->telunjuk_kiri))->height(120)->placeholder('-'),
+                            ImageEntry::make('tengah_kiri')->label('Jari Tengah Kiri')->url(fn ($record) => asset('storage/' . $record->tengah_kiri))->height(120)->placeholder('-'),
+                            ImageEntry::make('manis_kiri')->label('Jari Manis Kiri')->url(fn ($record) => asset('storage/' . $record->manis_kiri))->height(120)->placeholder('-'),
+                            ImageEntry::make('kelingking_kiri')->label('Kelingking Kiri')->url(fn ($record) => asset('storage/' . $record->kelingking_kiri))->height(120)->placeholder('-'),
+                        ])
+                        ->columns(5)
+                        ->columnSpanFull(),
                 ])
                 ->columns(2),
 

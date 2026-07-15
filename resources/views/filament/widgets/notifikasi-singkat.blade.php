@@ -1,10 +1,10 @@
-<x-filament::section>
+<x-filament::section wire:poll.15s>
     <x-slot name="heading">
         Notifikasi singkat
     </x-slot>
 
     <x-slot name="description">
-        Jadwal keluar hari ini dan kurang dari 7 hari ke depan (hasil refresh otomatis / refresh data).
+        Jadwal keluar hari ini dan kurang dari 7 hari ke depan (diperbarui otomatis setiap 15 detik).
     </x-slot>
 
     @php

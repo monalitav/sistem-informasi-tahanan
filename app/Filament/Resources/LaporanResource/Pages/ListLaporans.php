@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\LaporanResource\Pages;
 
 use App\Filament\Resources\LaporanResource;
+use App\Models\Pengaturan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -78,6 +80,49 @@ class ListLaporans extends ListRecords
                     };
 
                     return response()->streamDownload($callback, $filename, $headers);
+                }),
+
+            \Filament\Actions\Action::make('export_pdf')
+                ->label('Export PDF')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color('danger')
+                ->action(function () {
+                    $records = $this->getTableQuery()->get();
+
+                    $pengaturan = Pengaturan::current();
+
+                    $logoPath = public_path('images/logo.png');
+
+                    $logoBase64 = file_exists($logoPath)
+                        ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath))
+                        : null;
+
+                    $filterLabel = null;
+
+                    if (filled($this->bulan)) {
+                        $bulanLabel = [
+                            '1' => 'Januari', '2' => 'Februari', '3' => 'Maret', '4' => 'April',
+                            '5' => 'Mei', '6' => 'Juni', '7' => 'Juli', '8' => 'Agustus',
+                            '9' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember',
+                        ][$this->bulan] ?? null;
+
+                        $filterLabel = 'Bulan Masuk: ' . $bulanLabel;
+                    }
+
+                    $pdf = Pdf::loadView('laporan.pdf', [
+                        'records' => $records,
+                        'pengaturan' => $pengaturan,
+                        'logoBase64' => $logoBase64,
+                        'filterLabel' => $filterLabel,
+                        'tempatTandaTangan' => 'Malang',
+                    ])->setPaper('a4', 'portrait');
+
+                    $filename = 'laporan-tahanan-' . now()->format('Y-m-d-His') . '.pdf';
+
+                    return response()->streamDownload(
+                        fn () => print($pdf->output()),
+                        $filename,
+                    );
                 }),
         ];
     }

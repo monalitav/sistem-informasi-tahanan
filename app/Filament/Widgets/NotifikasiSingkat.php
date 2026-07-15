@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Notifikasi;
+use App\Services\TahananReleaseScanner;
 use Filament\Widgets\Widget;
 
 class NotifikasiSingkat extends Widget
@@ -15,6 +16,8 @@ class NotifikasiSingkat extends Widget
 
     public function getRingkasanProperty(): array
     {
+        app(TahananReleaseScanner::class)->scanIfDue();
+
         $baseQuery = Notifikasi::query()
             ->untukTahananAktif()
             ->dalamRentangKeluar()

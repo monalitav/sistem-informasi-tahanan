@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Notifikasi;
+use App\Services\TahananReleaseScanner;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -13,6 +14,8 @@ class NotifikasiKeluar extends BaseWidget
 
     public function table(Table $table): Table
     {
+        app(TahananReleaseScanner::class)->scanIfDue();
+
         return $table
             ->query(
                 Notifikasi::query()
@@ -52,6 +55,7 @@ class NotifikasiKeluar extends BaseWidget
                     ->wrap()
                     ->limit(120),
             ])
+            ->poll('15s')
             ->paginated(false);
     }
 }

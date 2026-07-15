@@ -32,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->brandName('Sistem Informasi Tahanan Polres Malang')
+            ->brandName('Sistem Informasi Administrasi Tahanan Polres Malang')
             ->login()
 
            ->brandLogo(fn () => new HtmlString('
@@ -40,7 +40,7 @@ class AdminPanelProvider extends PanelProvider
         <img src="' . asset('images/logo.png') . '" style="height:55px;">
         <div style="line-height:1.2;">
             <div style="font-size:16px; font-weight:600; color:white;">
-                Sistem Informasi Tahanan
+                Sistem Informasi Administrasi Tahanan
             </div>
             <div style="font-size:16px; color:white;">
                 Polres Malang

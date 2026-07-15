@@ -72,6 +72,8 @@ class ListNotifikasis extends ListRecords
 
     protected function getTableQuery(): Builder
     {
+        app(TahananReleaseScanner::class)->scanIfDue();
+
         $query = static::getResource()::getEloquentQuery();
 
         // Apply status terbaca filter

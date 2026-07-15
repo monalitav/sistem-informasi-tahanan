@@ -6,9 +6,29 @@ use App\Models\Notifikasi;
 use App\Models\Tahanan;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class TahananReleaseScanner
 {
+    /**
+     * Runs scan() at most once per $throttleSeconds, so pages/widgets can call
+     * this on every poll/render without hammering the database. This is what
+     * keeps notifications up to date on environments without an OS-level cron
+     * running `schedule:run`.
+     */
+    public function scanIfDue(int $throttleSeconds = 60): Collection
+    {
+        $cacheKey = 'tahanan-release-scan-last-run';
+
+        if (Cache::has($cacheKey)) {
+            return collect();
+        }
+
+        Cache::put($cacheKey, true, $throttleSeconds);
+
+        return $this->scan();
+    }
+
     public function scan(?Carbon $today = null): Collection
     {
         $today = ($today ?? now())->startOfDay();

@@ -1,5 +1,5 @@
 <x-filament-panels::page>
-    <div class="space-y-4">
+    <div class="space-y-4" wire:poll.15s>
         {{-- Filter dan Search Bar --}}
         <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
             <div class="p-4">

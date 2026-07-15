@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\NotifikasiResource\Pages;
 use App\Models\Notifikasi;
+use App\Services\TahananReleaseScanner;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -25,6 +26,8 @@ class NotifikasiResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
+        app(TahananReleaseScanner::class)->scanIfDue();
+
         $count = Notifikasi::query()
             ->untukTahananAktif()
             ->dalamRentangKeluar()

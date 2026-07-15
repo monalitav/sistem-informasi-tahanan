@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Notifikasi;
+use App\Services\TahananReleaseScanner;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -11,6 +12,8 @@ class NotifikasiOverview extends BaseWidget
 {
     protected function getStats(): array
     {
+        app(TahananReleaseScanner::class)->scanIfDue();
+
         $keluarHariIni = Notifikasi::query()
             ->untukTahananAktif()
             ->dalamRentangKeluar()
